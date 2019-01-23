@@ -31,7 +31,7 @@
     │  ├─index.php        单一入口
 
 
-   spl-dsl(EsParser类包 修改了like查询) 类包目前支持的sql函数
+   spl-dsl(EsParser(原作者:https://github.com/qieangel2013/EsParser) 修改了like查询) 类包目前支持的sql函数
 
     *  SQL Select
     *  SQL Delete
