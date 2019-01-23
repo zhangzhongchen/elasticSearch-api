@@ -8,7 +8,7 @@
 
     目录结构:
 
-    ├─elasticSearch 框架系统目录
+    ├─elasticSearch        框架系统目录
     │  ├─app               项目运行目录
     │  │  ├─ controller    控制器目录
     │  │  ├─ model         模型目录
@@ -27,8 +27,8 @@
     │  │  ├─ Response.php  响应
     │  ├─lib               框架类库目录
     │  │  ├─ spl-dsl       sql转dsl类库
-    │  ├─log              日志
-    │  ├─index.php        单一入口
+    │  ├─log               日志
+    │  ├─index.php         单一入口
 
 
    spl-dsl(EsParser(原作者:https://github.com/qieangel2013/EsParser) 修改了like查询) 类包目前支持的sql函数
