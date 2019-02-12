@@ -4,7 +4,7 @@
 return [
 
     //查询es请求的地址 端口
-    'host' => 'http://192.168.1.1:9200/',
+    'host' => 'http://localhost:9200/',
 
     //设置控制器 验证器 ['sign','xxx'] 可以多个
     'product' => ['sign'],

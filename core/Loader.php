@@ -8,9 +8,9 @@ class Loader
 
     /**
      * 自动加载
-     * @access public
-     * @param  string $class 类名
+     * @param $class
      * @return bool
+     * @throws \Exception
      */
     public static function autoload($class)
     {
@@ -18,7 +18,7 @@ class Loader
         $path = ROOT . $class . '.php';
 
         if (!file_exists($path)) {
-            Response::setHeaderCode(404);
+            Response::setHeaderCode(500);
             throw new \Exception($class . ' not found!');
         }
         include $path;

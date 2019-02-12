@@ -2,22 +2,21 @@
 namespace app\validate;
 
 use core\Request;
-use lib\Autograph;
 
 class Sign
 {
 
     /**
      * 验签
-     * @param $post_data
+     * @param $request array 请求参数
      * @return bool
      */
-    public function validate($post_data)
+    public function validate($request)
     {
-        if ($post_data) {
+        if ('validate success') {
             return true;
         }
-        returnError('sign error!');
+        return_error('sign error!');
     }
 
 

@@ -23,7 +23,7 @@ function P($data, $is_die = true)
  * @param string $msg
  * @param bool $die 是否终止执行
  */
-function returnSuccess($data = [], $msg = 'ok', $die = true)
+function return_success($data = [], $msg = 'ok', $die = true)
 {
     $resData = ['status' => 'success', 'msg' => $msg, 'data' => $data];
     Response::output($resData, $die);
@@ -34,7 +34,7 @@ function returnSuccess($data = [], $msg = 'ok', $die = true)
  * @param $msg
  * @param bool $die 是否中止执行
  */
-function returnError($msg, $die = true)
+function return_error($msg, $die = true)
 {
     $resData = ['status' => 'error', 'msg' => $msg];
     Response::output($resData, $die);
@@ -48,7 +48,7 @@ function returnError($msg, $die = true)
  * @param string $headers
  * @return array
  */
-function curlRequests($URL, $type, $params = [], $headers = true)
+function curl_requests($URL, $type, $params = [], $headers = true)
 {
     $ch = curl_init();
     $timeout = 5;
@@ -83,22 +83,54 @@ function curlRequests($URL, $type, $params = [], $headers = true)
     return $file_contents;
 }
 
-
 /**
  * 与 es 交互时
  * 处理返回 并记录错误日志
  * @param $res
  * @return string|array
  */
-function esRes($res)
+function es_res($res)
 {
     $res = json_decode($res, 1);
     if (isset($res['error'])) {
-        $error = isset($res['error']['reason']) ? $res['error']['reason'] : $res['error'];
-        logs("\r\n" . json_encode($error), 'elasticsearch-error.log');
+        logs("es-error : " . json_encode($res['error']), 'request-response.log');
         return 'error';
     }
-    return isset($res['hits']) ? $res['hits'] : $res;
+    return $res;
+}
+
+/**
+ * 查询es时返回数据处理
+ * 处理返回 并记录错误日志
+ * @param $res
+ * @param $model object 当前模型对象
+ * @return string|array
+ */
+function query_res($res, $model)
+{
+    $res = json_decode($res, 1);
+    if (isset($res['error'])) {
+        logs("es-error : " . json_encode($res['error']), 'request-response.log');
+        return 'error';
+    }
+    //没有查询到数据
+    if (!isset($res['hits']['total']) || $res['hits']['total'] == 0) {
+        return [];
+    }
+    $hits = $res['hits']['hits'];
+    $total = $res['hits']['total'];
+    //获取单条判断 返回一维数组
+    if ($model->limit == 1) {
+        return $hits[0]['_source'];
+    }
+    //重新组合数组
+    foreach ($res['hits']['hits'] as $k => $value) {
+        $value['_source']['relevance'] = $value['_score'];
+        $list[] = $value['_source'];
+    }
+
+    $pageData = ['total' => $total, 'pageCount' => ceil($total / $model->limit), 'page' => $model->page, 'limit' => $model->limit, 'list' => $list];
+    return $pageData;
 }
 
 /**
@@ -112,7 +144,8 @@ function logs($data, $file = '')
     if ($file == '') {
         $file = 'system.log';
     }
+    $logStr = "\r\n" . date('Y-m-d H:i:s') . " " . $data;
     $path = ROOT . 'log/' . $file;
-    return file_put_contents($path, $data, FILE_APPEND, null);
+    return file_put_contents($path, $logStr, FILE_APPEND, null);
 }
 

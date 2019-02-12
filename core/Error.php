@@ -28,7 +28,7 @@ class Error
      */
     public static function appError($errNo, $errStr, $errFile = '', $errLine = 0)
     {
-        $errorStrLog = "\r\n" . $errNo . '  ' . $errFile . ' : ' . $errLine . "\r\n" . $errStr;
+        $errorStrLog = "error:\r\n" . $errNo . '  ' . $errFile . ' : ' . $errLine . "\r\n" . $errStr;
 
         //记录错误日志
         logs($errorStrLog);
@@ -39,37 +39,39 @@ class Error
 
         //调试模式未开启 不显示详细错误信息
         if (!DEBUG) {
-            returnError('unknown error');
+            return_error('unknown error');
         }
 
         switch ($errNo) {
             case E_ERROR:
-                returnError($errorStr);
+                return_error($errorStr);
                 break;
             case E_WARNING:
-                returnError($errorStr, false);
+                return_error($errorStr, false);
                 break;
             case E_NOTICE:
-                returnError($errorStr, false);
+                return_error($errorStr, false);
                 break;
             default:
-                returnError($errorStr);
+                return_error($errorStr);
                 break;
         }
     }
 
     /**
-     * 异常处理
+     * 未被捕获的异常处理
      * @param $e
      */
     public static function appException($e)
     {
-        $exceptionStrLog = "\r\nnot capture Exception : " . $e->getMessage();
+        $exceptionStrLog = "not capture Exception:\r\n " . $e->getMessage();
 
         //记录错误日志
         logs($exceptionStrLog);
 
-        returnError($e->getMessage());
+        Response::setHeaderCode(500);
+
+        return_error('Exception : ' . $e->getMessage());
     }
 }
 

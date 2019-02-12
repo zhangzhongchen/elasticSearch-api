@@ -4,9 +4,19 @@ namespace core;
 class Request
 {
 
-
+    /**
+     * @var array 请求数据
+     */
     public $request;
+
+    /**
+     * @var string 控制器
+     */
     public $action;
+
+    /**
+     * @var string 请求方法
+     */
     public $method;
 
 
@@ -57,15 +67,6 @@ class Request
     }
 
     /**
-     * 获取请求方式
-     * @return mixed
-     */
-    public static function getRequestMethod()
-    {
-        return $_SERVER['REQUEST_METHOD'];
-    }
-
-    /**
      * 设置post数据
      * @param $array
      */
@@ -86,6 +87,15 @@ class Request
             return $_GET;
         }
         return isset($_GET[$key]) ? $_GET[$key] : $default;
+    }
+
+    /**
+     * 获取请求方式
+     * @return mixed
+     */
+    public static function getRequestMethod()
+    {
+        return $_SERVER['REQUEST_METHOD'];
     }
 
     /**

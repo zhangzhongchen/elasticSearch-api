@@ -79,8 +79,8 @@ class App
                 return true;
             }
             if (strtoupper($requestMethod) != Request::getRequestMethod()) {
-                $msg = 'request Method error Must post';
-                returnError($msg);
+                Response::setHeaderCode(500);
+                return_error('request Method error Must post');
             }
         }
     }
@@ -94,7 +94,7 @@ class App
     {
         if (!method_exists($controller, $method)) {
             Response::setHeaderCode(404);
-            returnError('request method not found');
+            return_error('request method not found');
         }
     }
 
@@ -102,9 +102,9 @@ class App
      * 写入请求日志 仅写入了请求地址 批量数据太大没有写入
      * @param $request
      */
-    protected static function requestLog($request)
+    public static function requestLog($request)
     {
-        logs("\r\n" . date('Y-m-d H:i:s') . " request : " . $request->getAction() . '/' . $request->getMethod(), 'request-response.log');
+        logs("request : " . $request->getAction() . '/' . $request->getMethod(), 'request-response.log');
     }
 
 }

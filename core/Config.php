@@ -8,7 +8,7 @@ class Config
     static $config;
 
     /**
-     * @param $key 支持二级配置 xxx.xxx
+     * @param $key string 支持二级配置 xxx.xxx
      * @return string
      */
     public static function get($key)
@@ -30,7 +30,7 @@ class Config
 
     /**
      * 获取单个索引的配置
-     * @param $index 索引名称(同文件名称)
+     * @param $index string 索引名称(同文件名称)
      * @param $key
      * @return string
      */

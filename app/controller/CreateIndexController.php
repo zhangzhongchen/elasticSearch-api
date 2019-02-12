@@ -15,24 +15,24 @@ class CreateIndexController
     {
         $index = $request::getParams('index');
         if (!$index) {
-            returnError('Lack of necessary parameters!');
+            return_error('index parameters not null!');
         }
         $index = strtolower($index);
         $analyzer = Config::getIndex($index,'customIndex');
         $host = Config::get('host');
         $url = $host . $index . '/' . $index;
-        $indexRes = curlRequests($host . $index, 'PUT', $analyzer);
+        $indexRes = curl_requests($host . $index, 'PUT', $analyzer);
         if ($indexRes != 'error') {
             $typeSetting = json_encode((object)[]);
             if ($customWord = Config::getIndex($index,'customWord')) {
                 $typeSetting = $customWord;
                 $url = $url . '/_mapping';
             }
-            $indexRes = curlRequests($url, 'POST', $typeSetting);
+            $indexRes = curl_requests($url, 'POST', $typeSetting);
         }
         if ($indexRes != 'error') {
-            returnSuccess('Create Index ok!');
+            return_success('Create Index ok!');
         }
-        returnError('Create Index error!');
+        return_error('Create Index error!');
     }
 }

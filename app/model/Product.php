@@ -6,35 +6,40 @@ use core\Model;
 use core\Config;
 use lib\Autograph;
 
-
 class Product extends Model
 {
 
+    //默认查询列表字段
+    public $select = ['entity_id', 'name', 'price', 'special_price', 'small_image'];
+
+    //默认where条件
+    public $where = ['is_salable' => 1];
+
+
     /**
-     * @param $sql 语句
+     * 产品查询
+     * @param $query
      * @return array
      */
-    public function productQuery($sql)
+    public function productQueryEs($query)
     {
-        $queryJson = $this->getDsl($sql);
-        p($queryJson,0);
-
+        $queryJson = $this->getQueryJson($query);
         $url = $this->url() . '_search';
-        $res = curlRequests($url, 'POST', $queryJson);
-        return esRes($res);
+        $res = curl_requests($url, 'POST', $queryJson);
+        return query_res($res, $this);
     }
 
     /**
-     * 批量添加数据
+     * 批量添加产品数据
      * @param $product array
      * @return string
      */
     public function productSaveAll($product)
     {
         $url = $this->url() . '_bulk';
-        $data = $this->_indexData($product);
-        $res = curlRequests($url, 'POST', $data);
-        return esRes($res);
+        $data = $this->_compositeJsonData($product);
+        $res = curl_requests($url, 'POST', $data);
+        return es_res($res);
     }
 
     /**
@@ -42,11 +47,11 @@ class Product extends Model
      * @param $data
      * @return string
      */
-    protected function _indexData($data)
+    protected function _compositeJsonData($data)
     {
         $res = '';
         foreach ($data as $row) {
-            $res .= '{"index": { "_index": "' . $this->getIndex() . '", "_type": "' . $this->getIndex() . '", "_id": "' . $row['entity_id'] . '" }}' . "\n";
+            $res .= '{"index": { "_index": "' . $this->index . '", "_type": "' . $this->index . '", "_id": "' . $row['entity_id'] . '" }}' . "\n";
             $res .= json_encode($row) . "\n";
         }
         return $res;

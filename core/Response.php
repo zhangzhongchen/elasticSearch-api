@@ -14,18 +14,18 @@ class Response
      */
     public static function output($res, $die = true)
     {
-        $returnFormat = Config::get('returnFormat');
-        if ($returnFormat == 'json') {
-            header('Content-type: application/json');
-            $res = json_encode($res);
-        }
-
         $logsData = $res;
         if (isset($logsData['data'])) {
             unset($logsData['data']);
         }
         //记录返回日志 仅记录状态 没有记录数据
-        logs("\r\n" . date('Y-m-d H:i:s') . ' response : ' . $logsData, 'request-response.log');
+        logs('response : ' . json_encode($logsData)."\r\n", 'request-response.log');
+
+        $returnFormat = Config::get('returnFormat');
+        if ($returnFormat == 'json') {
+            header('Content-type: application/json');
+            $res = json_encode($res);
+        }
 
         if ($die == true) {
             exit(is_array($res) ? print_r($res) : $res);
@@ -44,7 +44,7 @@ class Response
      */
     public static function setHeaderCode($num)
     {
-        $http = array(
+        $http = [
             100 => "HTTP/1.1 100 Continue",
             101 => "HTTP/1.1 101 Switching Protocols",
             200 => "HTTP/1.1 200 OK",
@@ -84,7 +84,7 @@ class Response
             502 => "HTTP/1.1 502 Bad Gateway",
             503 => "HTTP/1.1 503 Service Unavailable",
             504 => "HTTP/1.1 504 Gateway Time-out"
-        );
+        ];
         header($http[$num]);
     }
 
