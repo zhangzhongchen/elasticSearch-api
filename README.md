@@ -25,8 +25,7 @@
     │  │  ├─ Model.php     模型基类
     │  │  ├─ Request.php   请求
     │  │  ├─ Response.php  响应
-    │  ├─lib               框架类库目录
-    │  │  ├─ spl-dsl       sql转dsl类库
+    │  ├─lib               第三方类库目录
     │  ├─log               日志
     │  ├─index.php         单一入口
 
