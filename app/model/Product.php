@@ -23,7 +23,14 @@ class Product extends Model
      */
     public function productQueryEs($query)
     {
+        //请求参数自动赋值到属性
         $queryJson = $this->getQueryJson($query);
+        //手动赋值到属性
+//        $queryJson = $this->where(['category_ids' => 122, 'like' => ['name' => '德国']])
+//            ->select(['entity_id', 'name'])
+//            ->page(1)
+//            ->limit(15)
+//            ->build();
         $url = $this->url() . '_search';
         $res = curl_requests($url, 'POST', $queryJson);
         return query_res($res, $this);

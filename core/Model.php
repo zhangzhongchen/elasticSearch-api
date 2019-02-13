@@ -49,6 +49,7 @@ abstract class Model
     }
 
     /**
+     * 请求参数自动赋值到属性
      * 生成dsl查询语句
      * @param $query
      * @return string
@@ -56,16 +57,12 @@ abstract class Model
      */
     public function getQueryJson($query)
     {
-        logs('query : ' . json_encode($query, JSON_UNESCAPED_UNICODE), 'request-response.log');
-
-        isset($query['select']) && $this->select = $query['select'];
-        isset($query['page']) && $this->page = $query['page'];
-        isset($query['limit']) && $this->limit = $query['limit'];
-        isset($query['where']) && $this->where = ($this->where + $query['where']);
-        isset($query['order']) && $this->order = $query['order'];
-        $dsl = $this->splicingSql();
-
-        logs('dsl : ' . $dsl, 'request-response.log');
+        isset($query['select']) && $this->select($query['select']);
+        isset($query['page'])   && $this->page($query['page']);
+        isset($query['limit'])  && $this->limit($query['limit']);
+        isset($query['where'])  && $this->where($query['where']);
+        isset($query['order'])  && $this->order($query['order']);
+        $dsl = $this->build();
         return $dsl;
     }
 
@@ -73,19 +70,71 @@ abstract class Model
      * 执行拼接dsl数组
      * @return string
      */
-    public function splicingSql()
+    public function build()
     {
-        $this->_selectSql();
-        $this->_whereSql();
-        $this->_orderSql();
-        $this->_pageSql();
-        return json_encode($this->dsl, JSON_UNESCAPED_UNICODE);
+        $this->_select();
+        $this->_where();
+        $this->_order();
+        $this->_page();
+        $dsl = json_encode($this->dsl, JSON_UNESCAPED_UNICODE);
+        logs('dsl : ' . $dsl, 'request-response.log');
+        return $dsl;
+    }
+
+    /**
+     * @param $select
+     * @return $this
+     */
+    public function select($select)
+    {
+        $this->select = $select;
+        return $this;
+    }
+
+    /**
+     * @param $where
+     * @return $this
+     */
+    public function where($where)
+    {
+        $this->where = ($this->where + $where);
+        return $this;
+    }
+
+    /**
+     * @param $page
+     * @return $this
+     */
+    public function page($page)
+    {
+        $this->page = $page;
+        return $this;
+    }
+
+    /**
+     * @param $limit
+     * @return $this
+     */
+    public function limit($limit)
+    {
+        $this->limit = $limit;
+        return $this;
+    }
+
+    /**
+     * @param $order
+     * @return $this
+     */
+    public function order($order)
+    {
+        $this->order = $order;
+        return $this;
     }
 
     /**
      * 拼接查询字段
      */
-    protected function _selectSql()
+    protected function _select()
     {
         $this->dsl['_source'] = $this->select;
     }
@@ -94,7 +143,7 @@ abstract class Model
      * 拼接where条件
      * 暂时支持 like in between
      */
-    protected function _whereSql()
+    protected function _where()
     {
         if ($this->where) {
             foreach ($this->where as $k => $value) {
@@ -112,7 +161,7 @@ abstract class Model
     /**
      * 拼接排序
      */
-    protected function _orderSql()
+    protected function _order()
     {
         if ($this->order) {
             $this->dsl['sort'] = $this->order;
@@ -122,7 +171,7 @@ abstract class Model
     /**
      * 设置分页
      */
-    protected function _pageSql()
+    protected function _page()
     {
         $this->dsl['from'] = ($this->page - 1) * $this->limit;
         $this->dsl['size'] = $this->limit;
