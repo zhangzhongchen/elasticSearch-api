@@ -22,6 +22,7 @@ spl_autoload_register('core\\Loader::autoload', true, true);
 //注册异常和错误处理
 \core\Error::register();
 
+
 //运行
 \core\App::run();
 
