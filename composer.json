@@ -1,0 +1,12 @@
+{
+    "name": "wineplus/elastic-search",
+    "authors": [
+        {
+            "name": "zhangzhongchen",
+            "email": "738766192@qq.com"
+        }
+    ],
+    "require": {
+        "guzzlehttp/guzzle": "^6.3"
+    }
+}

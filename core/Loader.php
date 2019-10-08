@@ -2,6 +2,7 @@
 namespace core;
 
 use core\Response;
+use function GuzzleHttp\Promise\exception_for;
 
 class Loader
 {
@@ -14,6 +15,10 @@ class Loader
      */
     public static function autoload($class)
     {
+        //composer 加载
+        if (is_dir(VENDOR_PATH . 'composer')) {
+                require VENDOR_PATH . 'autoload.php';
+        }
         $class = str_replace('\\', '/', $class);
         $path = ROOT . $class . '.php';
 

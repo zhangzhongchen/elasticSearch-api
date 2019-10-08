@@ -13,7 +13,7 @@ return [
     'requestMethod' => 'post',
 
     //不强制post请求的控制器
-    'unwantedPost' => ['createindex'],
+    'unwantedPost' => ['index'],
 
     //输出返回格式
     'returnFormat' => 'json',

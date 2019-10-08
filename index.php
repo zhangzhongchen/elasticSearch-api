@@ -8,6 +8,7 @@ date_default_timezone_set('PRC');
 
 define('ROOT', str_replace('\\', '/', realpath(dirname(__FILE__) . '/')) . "/");
 define('APP_PATH', __DIR__ . '/app/');
+defined('VENDOR_PATH') or define('VENDOR_PATH', ROOT . 'vendor/');
 define('CORE_PATH', __DIR__ . '/core/');
 
 // 载入Loader类
