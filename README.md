@@ -27,6 +27,7 @@
     │  │  ├─ Response.php  响应
     │  ├─lib               第三方类库目录
     │  ├─log               日志
+    │  ├─vendor            包管理
     │  ├─index.php         单一入口
 
 
